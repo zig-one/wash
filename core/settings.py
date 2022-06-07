@@ -2,6 +2,7 @@ from frozen_dir import app_dir
 
 
 SETUP_DIR = app_dir()
+IMG_DIR = app_dir() / "img2"
 
 INIT_PICTURE = "init.png"
 TRAY_ICON = "init.png"

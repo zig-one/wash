@@ -4,7 +4,11 @@ import os
 import time
 import random
 from core import actions
-q = Queue()
+from core.act_queue import q as queueA
+from core.cloud import cli
+# from core.cloud import connected as WEB_CONNECTED
+# from core.cloud import chosen as WEB_CHOSEN
+
 
 
 def info(title):
@@ -13,34 +17,24 @@ def info(title):
     print('parent process:', os.getppid())
     print('process id:', os.getpid())
 
-# def f(q):
-#     b=0
-#     while True:
-#         # time.sleep(0.1)
-#         # b+=1
-#         q.put([random.randrange(1,100,1),b])
-
-
 def ff(qI):
-    q.put(qI)
-    print("queue size####################################################",q.qsize())
+    queueA.put(qI)
+    print("queue size####################################################",queueA.qsize())
 
     
 
 
 def start_processes():
-    # print("start processes")
-    # p = Process(target=f, args=(q,))
-    # p.daemon=True
-    # p.start()
+    print("start processes")
+    p = Process(target=cli.start, args=())
+    p.daemon=True
+    p.start()
     pass
     
 def randomAct():
-    t=random.randint(0, 7)
-    if t==0:
-        p = Process(target=ff, args=(actions.walk(),))
-        p.daemon=True
-        p.start()
+    t=random.randint(0, 8)
+    # t=0
+
     if t==1:
         # print("StTTTTands")
         p = Process(target=ff, args=(actions.stand(),))
@@ -66,6 +60,22 @@ def randomAct():
         p = Process(target=ff, args=(actions.sing(),))
         p.daemon=True
         p.start()
+    if t==7:
+        p = Process(target=ff, args=(actions.board(),))
+        p.daemon=True
+        p.start()
+    if t==8:
+        p = Process(target=ff, args=(actions.walkl(),))
+        p.daemon=True
+        p.start()
+    if t==9:
+        p = Process(target=ff, args=(actions.walkr(),))
+        p.daemon=True
+        p.start()
+    if t>=10:
+        p = Process(target=ff, args=(actions.hide(),))
+        p.daemon=True
+        p.start()        
     print("randomAct")
 
 

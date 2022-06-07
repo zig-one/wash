@@ -1,6 +1,7 @@
 from core.ability import Ability
 from core.conf import settings
 from core import actionList
+from core import status
 # from PyQt5.QtGui import QPixmap, QIcon, QPainter
 import time
 
@@ -8,8 +9,9 @@ class Action(object):
     """动作类, 读取action.py下的列表, 去img文件下下寻找对应的图片"""
 
     def __init__(self):
-        # self.imgDir = settings.SETUP_DIR / "img"
+        self.imgDir = settings.IMG_DIR
         pass
+
     def getQMovie(self, name):
         module = actionList
         pictures=[]
@@ -70,14 +72,15 @@ class ActionItem():
 
     def __init__(self,T_INTERVAL=500,actionName="",):
         self.TIME_INTERVAL=T_INTERVAL
-        print("ttINt",self.TIME_INTERVAL)
+        # print("Actime_interval",self.TIME_INTERVAL)
         self.actionName = actionName
-        self.imgDir = settings.SETUP_DIR / "img"        
-        print("ACTList")
-        print(actionName)
+        self.imgDir = settings.IMG_DIR
         self.ACTList,self.ACTTime=Action().getQMovie(actionName)
         for i in self.ACTTime:
             self.totTime+=i
+        print()
+        print("init actionName",actionName)
+        print()
 
 
     def init(self, Father):
@@ -86,7 +89,9 @@ class ActionItem():
         self.father.TIME_INTERVAL=self.TIME_INTERVAL
         print("fahter.TIME_INTERVAL",self.father.TIME_INTERVAL)
         self.finished=False
-        
+        #TODO: 可以在这儿缓存一下图片
+
+
     def Clicked(self,bt=None):
         pass
     def doubleClicked(self):
@@ -98,7 +103,7 @@ class ActionItem():
     def interrupted(self):
         pass   
     def finishedAct(self):
-        print("STOP!!!")
+        print("STOP!!!\n")
         self.finished=True
     def actionInterrupted(self):
         pass
@@ -111,7 +116,7 @@ class ActionItem():
         #寻找当前帧
         i=self.curTime
         k=0
-        print("self.curtime",self.curTime,"ACTTime.size",self.ACTTime.__len__(),"--------------------------")
+        print("        self.curtime",self.curTime,"ACTTime.size",self.ACTTime.__len__(),)
         while(i>0):
            i-=self.ACTTime[k]
            k+=1
@@ -181,10 +186,12 @@ class fallingBody(ActionItem):
 
 
 
-class walk(ActionItem):
+class walkl(ActionItem):
     curFrame=0
     def __init__(self,T_INTERVAL=500):
-        super(walk, self).__init__(T_INTERVAL=400,actionName="walk")
+        #dirction 0 left 1 right
+
+        super(walkl, self).__init__(T_INTERVAL=400,actionName="walkl")
         self.IsInterrupt = False
         self.acceptMove=True
         self.Move_able=True
@@ -200,10 +207,11 @@ class walk(ActionItem):
         """走路"""
         # if self.father.walking is True:
         print("--walking--")
+        print("    place:",self.father.pos().x())
         self.father.move(self.father.pos().x() - 4, self.father.pos().y())
-        if self.father.pos().x() < -128:
+        if self.father.pos().x() < -100:
             self.father.move(
-                self.father.desktop.availableGeometry().bottomRight().x() - 50,
+                self.father.desktop.availableGeometry().bottomRight().x() + 20,
                 self.father.pos().y(),
             )
         # print("curFrame",self.curFrame)
@@ -215,7 +223,42 @@ class walk(ActionItem):
             self.curFrame = 1
         # self.finished=False
 
+class walkr(ActionItem):
+    curFrame=0
+    def __init__(self,T_INTERVAL=500):
+        #dirction 0 left 1 right
 
+        super(walkr, self).__init__(T_INTERVAL=400,actionName="walkr")
+        self.IsInterrupt = False
+        self.acceptMove=True
+        self.Move_able=True
+        self.acceptClick=True
+        self.Interupt_able=True
+        self.finished=False
+
+    def Clicked(self,bt=None):
+        # print("stop!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        self.finishedAct()
+
+    def nextAct(self):
+        """走路"""
+        # if self.father.walking is True:
+        print("--walking--")
+        print("    place:",self.father.pos().x())
+
+        self.father.move(self.father.pos().x() + 4, self.father.pos().y())
+        if self.father.pos().x()>self.father.desktop.availableGeometry().bottomRight().x()+20:
+            self.father.move(
+                -100,
+                self.father.pos().y(),
+            )
+        self.father.setPix(self.ACTList[self.curFrame])
+        print("curframe ",self.ACTList[self.curFrame])
+        if self.curFrame == 1:
+            self.curFrame = 0
+        else:
+            self.curFrame = 1
+        # self.finished=False
 
 
 class stand(ActionItem):
@@ -298,3 +341,29 @@ class boring(ActionItem):
 
     def Clicked(self,bt=None):
         self.finishedAct()
+
+
+class board(ActionItem):
+    curFrame=0
+    def __init__(self,T_INTERVAL=500):
+        super(board, self).__init__(T_INTERVAL=400,actionName="board")
+        self.IsInterrupt = False
+        self.acceptMove=True
+        self.Move_able=True
+        self.acceptClick=True
+        self.Interupt_able=True
+
+    def Clicked(self,bt=None):
+        self.finishedAct()
+
+class hide(ActionItem):
+    curFrame=0
+    def __init__(self,T_INTERVAL=1000):
+        super(hide, self).__init__(T_INTERVAL=1000,actionName="hide")
+        self.IsInterrupt = False
+        self.Interupt_able=True
+    
+    def nextAct(self):
+        if(status.selected):
+            self.finishedAct()
+            self.father.setPix(self.ACTList[0])

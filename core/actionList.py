@@ -20,5 +20,14 @@ runtime=[5,5]*5
 sing = ["sing1.png"] + ["sing2.png", "sing3.png"] * 5
 singtime=[1]+[2,3]*5
 
-walk = ["walk1.png", "walk2.png"]
-walktime = [5,5]
+walkl = ["walk1.png", "walk2.png"]
+walkltime = [5,5]
+
+walkr = ["walk3.png", "walk4.png"]
+walkrtime = [5,5]
+
+board = ["board1.png", "board2.png"]
+boardtime = [5,5]
+
+hide = ["init.png"]
+hidetime = [5]

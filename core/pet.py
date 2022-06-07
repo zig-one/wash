@@ -1,5 +1,5 @@
 import core.interaction as interaction
-from core.interaction import q as queueA
+from core.act_queue import q as queueA
 import queue
 import time
 import random
@@ -28,7 +28,7 @@ class DesktopPet(QMainWindow):
     curAction=actions.fallingBody()
     TIME_INTERVAL=500
     def __init__(self, parent=None, tray=False):
-        self.imgDir = settings.SETUP_DIR / "img"
+        self.imgDir = settings.IMG_DIR
         super(DesktopPet, self).__init__(parent)
         self.draging = False
         self.autoFalling = False
@@ -51,7 +51,12 @@ class DesktopPet(QMainWindow):
         print("屏幕高:" + str(self.desktop.height()))
         self.setWindowFlags(
             Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint  # 无框，置顶
+            |Qt.X11BypassWindowManagerHint # 允许移动出屏幕
         )
+        self.move(100, 100)
+
+
+
         self.setAttribute(Qt.WA_TranslucentBackground, True)  # 背景透明
         self.setAutoFillBackground(False)
         if self.tray:
@@ -128,8 +133,8 @@ class DesktopPet(QMainWindow):
             self.pix = pix
         else:
             # self.pix = QPixmap(pix)
-            self.pix = QPixmap(str(settings.SETUP_DIR / "img"/ pix))
-        # self.pix=self.pix.scaledToWidth(40,Qt.SmoothTransformation)
+            self.pix = QPixmap(str(settings.IMG_DIR / pix))
+        self.pix=self.pix.scaledToWidth(120,Qt.SmoothTransformation)
         self.resize(self.pix.size())
         # setMask()的作用是为调用它的控件增加一个遮罩，遮住所选区域以外的部分，使之看起来是透明的。
         # 它的参数可以为QBitmap或QRegion对象，此处调用QPixmap的mask（）函数获得图片自身的遮罩，是一个QBitmap对象，
@@ -156,7 +161,7 @@ class DesktopPet(QMainWindow):
         try:
             # print(queueA.qsize(),"              ----       ")
             #避免动作序列过量积压
-            while(interaction.q.qsize()>1000):
+            while(queueA.qsize()>1000):
                 print("interation queue overflow")
                 queueA.get(block=False)
             while(q.qsize()>1000):
@@ -170,7 +175,8 @@ class DesktopPet(QMainWindow):
         # except queue.Empty:
         #     print("get All interactions")
         except BaseException as e:
-            print("WAWa",e)
+            # print("end",e)
+            pass
 
 
 
