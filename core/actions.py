@@ -137,20 +137,21 @@ class drag(ActionItem):
         self.Interupt_able=False
 
     def nextAct(self):
+        print(self.father)
         if (self.father.draging==False):
             finished=True
         else:
             if -1 <= self.father.moveDistance < 0:
                 self.father.setPix(str(self.imgDir / settings.MOUSE_TO_RIGHT_1))
-            elif -2 <= self.father.mmoveDistance < -1:
+            elif -2 <= self.father.moveDistance < -1:
                 self.father.setPix(str(self.imgDir / settings.MOUSE_TO_RIGHT_2))
-            elif self.father.mmoveDistance < -2:
+            elif self.father.moveDistance < -2:
                 self.father.setPix(str(self.imgDir / settings.MOUSE_TO_RIGHT_3))
-            elif 0 < self.father.mmoveDistance <= 1:
+            elif 0 < self.father.moveDistance <= 1:
                 self.father.setPix(str(self.imgDir / settings.MOUSE_TO_LEFT_1))
-            elif 1 < self.father.mmoveDistance <= 2:
+            elif 1 < self.father.moveDistance <= 2:
                 self.father.self.father.msetPix(str(self.imgDir / settings.MOUSE_TO_LEFT_2))
-            elif 2 < self.father.mmoveDistance:
+            elif 2 < self.father.moveDistance:
                 self.father.setPix(str(self.imgDir / settings.MOUSE_TO_LEFT_3))
         
 
@@ -360,8 +361,9 @@ class hide(ActionItem):
     curFrame=0
     def __init__(self,T_INTERVAL=1000):
         super(hide, self).__init__(T_INTERVAL=1000,actionName="hide")
-        self.IsInterrupt = False
-        self.Interupt_able=True
+        self.IsInterrupt = True
+        self.Interupt_able=False
+        self.priority=10000
     
     def nextAct(self):
         if(status.selected):

@@ -27,6 +27,8 @@ class DesktopPet(QMainWindow):
 
     curAction=actions.fallingBody()
     TIME_INTERVAL=500
+    draging = False
+
     def __init__(self, parent=None, tray=False):
         self.imgDir = settings.IMG_DIR
         super(DesktopPet, self).__init__(parent)
@@ -197,6 +199,7 @@ class DesktopPet(QMainWindow):
             if(t.IsInterrupt and self.curAction.Interupt_able):
                 self.curAction.actionInterrupted()
                 self.curAction=t
+                self.curAction.init(self)
             else:
                 q.put(t)
                 self.curAction.nextAct()

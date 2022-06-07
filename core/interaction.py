@@ -6,6 +6,7 @@ import random
 from core import actions
 from core.act_queue import q as queueA
 from core.cloud import cli
+from core import status
 # from core.cloud import connected as WEB_CONNECTED
 # from core.cloud import chosen as WEB_CHOSEN
 
@@ -33,51 +34,54 @@ def start_processes():
     
 def randomAct():
     t=random.randint(0, 8)
-    # t=0
-
-    if t==1:
-        # print("StTTTTands")
-        p = Process(target=ff, args=(actions.stand(),))
-        p.daemon=True
-        p.start()
-    if t==2:
-        p = Process(target=ff, args=(actions.boring(),))
-        p.daemon=True
-        p.start()
-    if t==3:
-        p = Process(target=ff, args=(actions.lie(),))
-        p.daemon=True
-        p.start()
-    if t==4:
-        p = Process(target=ff, args=(actions.pull(),))
-        p.daemon=True
-        p.start()
-    if t==5:
-        p = Process(target=ff, args=(actions.run(),))
-        p.daemon=True
-        p.start()
-    if t==6:
-        p = Process(target=ff, args=(actions.sing(),))
-        p.daemon=True
-        p.start()
-    if t==7:
-        p = Process(target=ff, args=(actions.board(),))
-        p.daemon=True
-        p.start()
-    if t==8:
-        p = Process(target=ff, args=(actions.walkl(),))
-        p.daemon=True
-        p.start()
-    if t==9:
-        p = Process(target=ff, args=(actions.walkr(),))
-        p.daemon=True
-        p.start()
-    if t>=10:
+    # # t=0
+    if(status.selected):
+        if t==1:
+            # print("StTTTTands")
+            p = Process(target=ff, args=(actions.stand(),))
+            p.daemon=True
+            p.start()
+        if t==2:
+            p = Process(target=ff, args=(actions.boring(),))
+            p.daemon=True
+            p.start()
+        if t==3:
+            p = Process(target=ff, args=(actions.lie(),))
+            p.daemon=True
+            p.start()
+        if t==4:
+            p = Process(target=ff, args=(actions.pull(),))
+            p.daemon=True
+            p.start()
+        if t==5:
+            p = Process(target=ff, args=(actions.run(),))
+            p.daemon=True
+            p.start()
+        if t==6:
+            p = Process(target=ff, args=(actions.sing(),))
+            p.daemon=True
+            p.start()
+        if t==7:
+            p = Process(target=ff, args=(actions.board(),))
+            p.daemon=True
+            p.start()
+        if t==8:
+            p = Process(target=ff, args=(actions.walkl(),))
+            p.daemon=True
+            p.start()
+        if t==9:
+            p = Process(target=ff, args=(actions.walkr(),))
+            p.daemon=True
+            p.start()
+        # if t>=10:
+        #     p = Process(target=ff, args=(actions.hide(),))
+        #     p.daemon=True
+        #     p.start()        
+        print("randomAct")
+    else:
         p = Process(target=ff, args=(actions.hide(),))
         p.daemon=True
-        p.start()        
-    print("randomAct")
-
+        p.start()            
 
 
 

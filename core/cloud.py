@@ -7,6 +7,10 @@ from core import actions
 from core import status
 
 
+
+
+
+
 sio = socketio.Client()
 
 
@@ -15,8 +19,7 @@ def mydisconnected():
     if(status.connected):
         status.connected=False
         print("disconnected")
-        queueA.put(actions.hide())
-
+        
 
 def myconnected():
     if(not status.connected):
@@ -24,7 +27,14 @@ def myconnected():
         print("connected")
         # queueA.put(actions.hide())
 
-def chosed
+def myselected():
+    print("!!!!!selected")
+    status.selected=True
+def myreleased():
+    print("!!!!!release")
+    status.selected=False
+    queueA.put(actions.hide())
+
 
 
 class client():
@@ -45,16 +55,14 @@ class client():
 
     @sio.on('response')
     def on_message(data):
-        # global chosen
+        # global selected
         # print('Client get response:',data['data'])
         print('Client get response:',data)
-        print((data['chosen']))
-        if(data['chosen']=='1' and (not status.chosen)):
-            print("!!!!!chose")
-            status.chosen=True
-        elif (data['chosen']=='0' and (status.chosen)):
-            print("!!!!!release")
-            status.chosen=False
+        print((data['selected']))
+        if(data['selected']=='1' and (not status.selected)):
+            myselected()
+        elif (data['selected']=='0' and (status.selected)):
+            myreleased()
         else:
             print("maintain")
 
